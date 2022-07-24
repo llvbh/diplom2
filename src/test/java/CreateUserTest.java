@@ -11,8 +11,9 @@ public class CreateUserTest {
     private User user;
     @Before
     public void setUp() {
-         userClient = new UserClient();
-        user = new User("Nazym505e11@yandex.ru", "qwerty12", "Altynsarin");
+        userClient = new UserClient();
+        user = new User("Thisismyemail5@gmail.com", "dfsfdsf", "Email3333");
+
     }
     @Test
     //@DisplayName("Check create user method")
@@ -23,7 +24,7 @@ public class CreateUserTest {
     @Test
     //@DisplayName("Check user add method with Dublicate args")
     public void checkCreateUserWithSameValues() {
-        ResponseUserWithError createUser= userClient.dontCreateUser(user, 403, "success");
+        ResponseUserWithError createUser= userClient.doNotCreateUser(user, 403, "success");
         System.out.println(createUser);
         Assert.assertEquals("User already exists", createUser.getMessage());
     }
@@ -31,7 +32,7 @@ public class CreateUserTest {
   //@DisplayName("Check use add method With No Param")
   public void checkCreateUserWithNoEmail(){
       user = new User(null, "qwerty12", "Altynsarin");
-      ResponseUserWithError createUser = userClient.dontCreateUser(user, 401, "success");
+      ResponseUserWithError createUser = userClient.doNotCreateUser(user, 401, "success");
       Assert.assertEquals("Email, password and name are required fields", createUser.getMessage());
   }
 

@@ -3,11 +3,11 @@ import lombok.Data;
 import pojo.User;
 @Data
 public class UserCredentials {
-    private String name;
+    private String email;
     private String password;
 
     public UserCredentials(User user) {
-        this.name = user.getName();
+        this.email = user.getEmail();
         this.password = user.getPassword();
     }
 
