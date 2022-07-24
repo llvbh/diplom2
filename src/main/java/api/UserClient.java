@@ -59,7 +59,7 @@ public class UserClient {
                 .as(ResponseUserLoginWithError.class);
     }
 
-    public ResponseEditUser editUser(ResponseUserInfo userInfo, String authorization, int statusCode){
+    public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization){
         return given()
                 .header("Content-type", "application/json")
                 .baseUri("https://stellarburgers.nomoreparties.site/api")
@@ -71,6 +71,19 @@ public class UserClient {
                 .then()
                 .extract()
                 .body()
-                .as(ResponseEditUser.class);
+                .as(ResponseEditUserWithAuth.class);
+    }
+
+    public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo){
+        return given()
+                .header("Content-type", "application/json")
+                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .body(userInfo)
+                .when()
+                .patch("https://stellarburgers.nomoreparties.site/api/auth/user")
+                .then()
+                .extract()
+                .body()
+                .as(ResponseEditUserWithError.class);
     }
 }

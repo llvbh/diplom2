@@ -3,7 +3,7 @@ package pojo;
 import lombok.Data;
 
 @Data
-public class ResponseEditUser {
+public class ResponseEditUserWithAuth {
     private ResponseUserInfo user;
     private boolean success;
 }
