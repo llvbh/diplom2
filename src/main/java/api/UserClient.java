@@ -86,4 +86,30 @@ public class UserClient {
                 .body()
                 .as(ResponseEditUserWithError.class);
     }
+
+    public ResponseUserWithAuthOrders getOrdersAuthUser(String authorization){
+        return given()
+                .header("Content-type", "application/json")
+                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .auth()
+                .oauth2(authorization)
+                .get("https://stellarburgers.nomoreparties.site/api/orders")
+                .then()
+                .extract()
+                .body()
+                .as(ResponseUserWithAuthOrders.class);
+    }
+
+    public ResponseUserWithError getOrdersNotAuthUser(String authorization){
+        return given()
+                .header("Content-type", "application/json")
+                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .auth()
+                .oauth2(authorization)
+                .get("https://stellarburgers.nomoreparties.site/api/orders")
+                .then()
+                .extract()
+                .body()
+                .as(ResponseUserWithError.class);
+    }
 }
