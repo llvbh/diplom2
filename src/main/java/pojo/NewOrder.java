@@ -1,17 +1,13 @@
 package pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class NewOrder {
-    private int number;
+    private Ingredient ingredients;
 
-    public int getNumber() {
-        return number;
-    }
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public NewOrder(int number) {
-        this.number = number;
-    }
 }
