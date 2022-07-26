@@ -15,8 +15,8 @@ public class CreateOrderTest {
     private OrderClient orderClient;
     ResponseUserLogin userInfo;
 
-    private final List<String> ingredients = List.of("61c0c5a71d1f82001bdaaa6d");
-    private final List<String> ingredientsWithWrongHash = List.of("6xc1c0c5a71d1f82001bdaaa6d");
+//    private final List<String> ingredients = List.of("61c0c5a71d1f82001bdaaa6d");
+//    private final List<String> ingredientsWithWrongHash = List.of("6xc1c0c5a71d1f82001bdaaa6d");
 
     @Before
     public void setUp() {
@@ -46,6 +46,17 @@ public class CreateOrderTest {
     }
 
     @Test
+    public void checkCreateOrderWithIngredients(){
+        String accessToken = userInfo.getAccessToken();
+        Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
+       Response createOrder = orderClient.createOrder2(accessToken, ingredients, 200);
+        System.out.println("fgfgd");
+        //System.out.println(createOrder.asString().contains("name"));
+       assertEquals(true, createOrder.asString().contains("name"));
+        //"Bearer".length() + 1)
+    }
+
+    @Test
     public void checkCreateOrderWithWrongHash(){
         String accessToken = userInfo.getAccessToken();
         //System.out.println(accessToken);
@@ -58,6 +69,7 @@ public class CreateOrderTest {
         assertEquals(500, createOrder.statusCode());
 
     }
+
 
     @Test
     public void checkCreateOrderWithoutIngredients(){
