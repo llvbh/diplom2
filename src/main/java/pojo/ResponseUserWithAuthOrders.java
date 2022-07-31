@@ -10,8 +10,4 @@ public class ResponseUserWithAuthOrders {
     private List<Orders> orders;
     private int total;
     private int totalToday;
-
-
-
-
 }

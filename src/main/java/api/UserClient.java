@@ -5,28 +5,41 @@ import pojo.*;
 import static io.restassured.RestAssured.given;
 
 public class UserClient {
-    protected final String ROOT = "https://stellarburgers.nomoreparties.site/api/";
-    protected final String REGISTER = ROOT + "auth/register";
-    protected final String LOGIN = ROOT + "auth/login";
+
+    protected final static String ROOT = "https://stellarburgers.nomoreparties.site/api";
+    protected final static String REGISTER = ROOT + "/auth/register";
+    protected final static String LOGIN = ROOT + "/auth/login";
+    protected final static String USER = ROOT + "/auth/user";
 
      public ResponseUser createUser(User user, int statusCode, String responseMessage){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .body(user)
-                .post("https://stellarburgers.nomoreparties.site/api/auth/register")
+                .post(REGISTER)
                 .then()
                 .extract()
                 .body()
                 .as(ResponseUser.class);
      }
 
+    public static void deleteUser(String authorization) {
+         given()
+                .header("Content-type", "application/json")
+                .baseUri(ROOT)
+                .auth()
+                .oauth2(authorization)
+                .delete(USER)
+                .then()
+                .statusCode(202);
+    }
+
     public ResponseUserWithError doNotCreateUser(User user, int statusCode, String responseMessage){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .body(user)
-                .post("https://stellarburgers.nomoreparties.site/api/auth/register")
+                .post(REGISTER)
                 .then()
                 .extract()
                 .body()
@@ -49,10 +62,10 @@ public class UserClient {
     public ResponseUserLoginWithError loginUserWithError(UserCredentials creds, int statusCode, String responseMessage){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .body(creds)
                 .when()
-                .post("https://stellarburgers.nomoreparties.site/api/auth/login")
+                .post(LOGIN)
                 .then()
                 .extract()
                 .body()
@@ -62,12 +75,12 @@ public class UserClient {
     public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .auth()
                 .oauth2(authorization)
                 .body(userInfo)
                 .when()
-                .patch("https://stellarburgers.nomoreparties.site/api/auth/user")
+                .patch(USER)
                 .then()
                 .extract()
                 .body()
@@ -77,10 +90,10 @@ public class UserClient {
     public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .body(userInfo)
                 .when()
-                .patch("https://stellarburgers.nomoreparties.site/api/auth/user")
+                .patch(USER)
                 .then()
                 .extract()
                 .body()
@@ -90,7 +103,7 @@ public class UserClient {
     public ResponseUserWithAuthOrders getOrdersAuthUser(String authorization){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .auth()
                 .oauth2(authorization)
                 .get("https://stellarburgers.nomoreparties.site/api/orders")
@@ -103,7 +116,7 @@ public class UserClient {
     public ResponseUserWithError getOrdersNotAuthUser(String authorization){
         return given()
                 .header("Content-type", "application/json")
-                .baseUri("https://stellarburgers.nomoreparties.site/api")
+                .baseUri(ROOT)
                 .auth()
                 .oauth2(authorization)
                 .get("https://stellarburgers.nomoreparties.site/api/orders")

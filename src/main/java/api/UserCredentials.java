@@ -1,8 +1,11 @@
 package api;
+
 import lombok.Data;
 import pojo.User;
+
 @Data
 public class UserCredentials {
+
     private String email;
     private String password;
 

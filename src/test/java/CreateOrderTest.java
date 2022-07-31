@@ -1,6 +1,7 @@
 import api.OrderClient;
 import api.UserClient;
 import api.UserCredentials;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,87 +12,70 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class CreateOrderTest {
-    private UserClient userClient;
-    private OrderClient orderClient;
-    ResponseUserLogin userInfo;
 
-//    private final List<String> ingredients = List.of("61c0c5a71d1f82001bdaaa6d");
-//    private final List<String> ingredientsWithWrongHash = List.of("6xc1c0c5a71d1f82001bdaaa6d");
+    private OrderClient orderClient;
+    private ResponseUserLogin userInfo;
 
     @Before
     public void setUp() {
-        userClient = new UserClient();
+        UserClient userClient = new UserClient();
         orderClient = new OrderClient();
-        User user = new User("44thismynewemail@yandx.ru", "dfsfdsf", "Email3333");
+        User user = new User("Thisismy666@gmail.com", "dfsfdsf", "Email3333");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred, 200, "success");
-
         // Убираем слово Bearer из аксес токена
         userInfo.setAccessToken(userInfo.getAccessToken().substring("Bearer".length() + 1));
-
-       //System.out.println(userInfo.getAccessToken());
     }
 
     @Test
-    public void checkCreateOrderAuthUser(){
+    @DisplayName("Check create order")
+    public void checkCreateOrderAuthUser() throws InterruptedException {
         String accessToken = userInfo.getAccessToken();
-        System.out.println(accessToken);
-
-            ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
-            Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
+        Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
         List<String> createOrder = orderClient.createOrder(accessToken, ingredients, 200);
-        System.out.println("fgfgd");
-        System.out.println(createOrder);
         assertNotNull(createOrder);
+        Thread.sleep(2000);
     }
 
     @Test
-    public void checkCreateOrderWithIngredients(){
+    @DisplayName("Check create order with ingredients")
+    public void checkCreateOrderWithIngredients() throws InterruptedException {
         String accessToken = userInfo.getAccessToken();
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
-       Response createOrder = orderClient.createOrder2(accessToken, ingredients, 200);
-        System.out.println("fgfgd");
-        //System.out.println(createOrder.asString().contains("name"));
-       assertEquals(true, createOrder.asString().contains("name"));
-        //"Bearer".length() + 1)
+        Response createOrder = orderClient.createOrderIngredients(accessToken, ingredients, 200);
+        assertTrue(createOrder.asString().contains("name"));
+        Thread.sleep(2000);
     }
 
     @Test
-    public void checkCreateOrderWithWrongHash(){
+    @DisplayName("Check create order with wrong ingredients")
+    public void checkCreateOrderWithWrongHash() throws InterruptedException {
         String accessToken = userInfo.getAccessToken();
-        //System.out.println(accessToken);
-
         ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71gfdd1f82001bdaaa6dx"));
-        Response createOrder = orderClient.createOrder2(accessToken, ingredients, 500);
-        System.out.println("fgfgd");
-        System.out.println(createOrder.statusCode());
+        Response createOrder = orderClient.createOrderIngredients(accessToken, ingredients, 500);
         assertEquals(500, createOrder.statusCode());
-
+        Thread.sleep(2000);
     }
 
-
     @Test
-    public void checkCreateOrderWithoutIngredients(){
+    @DisplayName("Check create order without ingredients")
+    public void checkCreateOrderWithoutIngredients() throws InterruptedException {
         String accessToken = userInfo.getAccessToken();
         ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
         Ingredients ingredients = new Ingredients(List.of(""));
-        Response createOrder = orderClient.createOrder3(accessToken, null, 400);
+        Response createOrder = orderClient.createOrderWithoutIngredients(accessToken, null, 400);
         assertEquals(400, createOrder.statusCode());
-
+        Thread.sleep(2000);
     }
+
     @Test
-    public void checkCreateOrderWithoutAuthUser(){
+    @DisplayName("Check create order without auth")
+    public void checkCreateOrderWithoutAuthUser() throws InterruptedException {
         String accessToken = "";
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
-        List<String> createOrder2 = orderClient.createOrder(accessToken, ingredients, 200);
-        //в реальности данный тест не падает при создании без авторизации, поэтому проверяю на наличие id
-        System.out.println("createOrder2");
-        System.out.println(createOrder2);
-        assertNull(createOrder2);
-        System.out.println("yddd");
-
+        List<String> createOrderIngredients = orderClient.createOrder(accessToken, ingredients, 200);
+        assertNull(createOrderIngredients);
+        Thread.sleep(2000);
     }
-
-
 }

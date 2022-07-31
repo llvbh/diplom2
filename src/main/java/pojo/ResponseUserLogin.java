@@ -8,5 +8,4 @@ public class ResponseUserLogin {
     private String refreshToken;
     private boolean success;
     private ResponseUserInfo user;
-
 }
