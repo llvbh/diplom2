@@ -1,6 +1,7 @@
 import api.UserClient;
 import api.UserCredentials;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 import pojo.*;
@@ -11,39 +12,43 @@ public class AuthEditUserTest {
 
     private UserClient userClient;
     private ResponseUserLogin userInfo;
+    String accessToken;
 
     @Before
     public void setUp() {
         userClient = new UserClient();
-        User user = new User("44thismynewemail@yandx.ru", "dfsfdsf", "Email3333");
+        User user = new User("posteee24@apple.com", "newNameddd4", "Email43333");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred);
+        accessToken = userInfo.getAccessToken();
     }
 
     @Test
     @DisplayName("Check  Login method")
     public void checkLoginUser(){
-        assertTrue(userInfo.isSuccess());
+        User user = new User("posteee24s@apple.com", "newNameddds4", "Email43s333");
+        UserCredentials cred = UserCredentials.from(user);
+        ResponseUserLogin userInfo = userClient.loginUser(cred);
+        assertEquals("posteee24@apple.com", userInfo.getUser().getEmail());
     }
 
 
     @Test
     @DisplayName("Check Login method With Wrong Args")
     public void checkLoginUserWithWrongArgs(){
-        User user = new User(null, "dfsfdsf", "Email3333");
+        User user = new User(null, "Imya", "123456");
         UserCredentials cred = UserCredentials.from(user);
         ResponseUserLoginWithError userInfo = userClient.loginUserWithError(cred);
-        assertFalse(userInfo.isSuccess());
+        System.out.println(userInfo.isSuccess());
+        assertEquals("email or password are incorrect", userInfo.getMessage());
     }
 
     @Test
     @DisplayName("Check edit method")
     public void checkEditAuthUser(){
-        String accessToken = userInfo.getAccessToken();
-        ResponseUserInfo newEmail = new ResponseUserInfo("newEmail@apple.com", "newName");
+        ResponseUserInfo newEmail = new ResponseUserInfo("post3@apple.com", "newName3");
         ResponseEditUserWithAuth editUser = userClient.editUser(newEmail, accessToken);
-        assertEquals("Мэйл не соответствует:", "newEmail@apple.com", editUser.getUser().getEmail());
-        assertEquals("Имя не соответствует:", "newName", editUser.getUser().getName());
+        assertEquals("post3@apple.com", editUser.getUser().getEmail());
     }
 
     @Test
