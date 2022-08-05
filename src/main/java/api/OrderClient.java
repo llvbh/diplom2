@@ -2,21 +2,16 @@ package api;
 
 import io.restassured.response.Response;
 import pojo.*;
-
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-
-public class OrderClient {
+public class OrderClient extends RestAssuredClient  {
 
     public List<String> createOrder(String authorization, Ingredients ingredients, int statusCode){
-        return given()
-            .header("Content-type", "application/json")
-            .baseUri("https://stellarburgers.nomoreparties.site/api")
+        return reqSpec
             .auth()
             .oauth2(authorization)
             .body(ingredients)
-            .post("https://stellarburgers.nomoreparties.site/api/orders")
+            .post(ORDERS)
             .then()
             .assertThat()
             .statusCode(statusCode)
@@ -25,26 +20,24 @@ public class OrderClient {
     }
 
     public Response createOrderIngredients (String authorization, Ingredients ingredients, int statusCode){
-        return given()
-            .header("Content-type", "application/json")
-            .baseUri("https://stellarburgers.nomoreparties.site/api")
+        return reqSpec
             .auth()
             .oauth2(authorization)
             .body(ingredients)
-            .post("https://stellarburgers.nomoreparties.site/api/orders")
+            .post(ORDERS)
             .then()
             .assertThat()
             .statusCode(statusCode)
-            .extract().response();
+            .extract()
+            .response();
     }
 
     public Response createOrderWithoutIngredients (String authorization, Ingredients ingredients, int statusCode){
-        return given()
-            .header("Content-type", "application/json")
-            .baseUri("https://stellarburgers.nomoreparties.site/api")
+        return reqSpec
             .auth()
             .oauth2(authorization)
-            .post("https://stellarburgers.nomoreparties.site/api/orders")
+            .body(ingredients)
+            .post(ORDERS)
             .then()
             .assertThat()
             .statusCode(statusCode)

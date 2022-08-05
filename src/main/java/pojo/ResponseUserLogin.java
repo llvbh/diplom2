@@ -8,4 +8,8 @@ public class ResponseUserLogin {
     private String refreshToken;
     private boolean success;
     private ResponseUserInfo user;
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken.substring("Bearer".length() + 1);
+    }
 }

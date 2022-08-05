@@ -6,4 +6,5 @@ import lombok.Data;
 public class ResponseUserWithError {
     private boolean success;
     private String message;
+
 }

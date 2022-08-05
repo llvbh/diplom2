@@ -17,9 +17,7 @@ public class AuthEditUserTest {
         userClient = new UserClient();
         User user = new User("44thismynewemail@yandx.ru", "dfsfdsf", "Email3333");
         UserCredentials cred = UserCredentials.from(user);
-        userInfo = userClient.loginUser(cred, 200, "success");
-        // Убираем слово Bearer из аксес токена
-        userInfo.setAccessToken(userInfo.getAccessToken().substring("Bearer".length() + 1));
+        userInfo = userClient.loginUser(cred);
     }
 
     @Test
@@ -34,7 +32,7 @@ public class AuthEditUserTest {
     public void checkLoginUserWithWrongArgs(){
         User user = new User(null, "dfsfdsf", "Email3333");
         UserCredentials cred = UserCredentials.from(user);
-        ResponseUserLoginWithError userInfo = userClient.loginUserWithError(cred, 401, "success");
+        ResponseUserLoginWithError userInfo = userClient.loginUserWithError(cred);
         assertFalse(userInfo.isSuccess());
     }
 
@@ -42,15 +40,16 @@ public class AuthEditUserTest {
     @DisplayName("Check edit method")
     public void checkEditAuthUser(){
         String accessToken = userInfo.getAccessToken();
-        ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
+        ResponseUserInfo newEmail = new ResponseUserInfo("newEmail@apple.com", "newName");
         ResponseEditUserWithAuth editUser = userClient.editUser(newEmail, accessToken);
-        assertEquals("44thismynewemail@yandx.ru", editUser.getUser().getEmail());
+        assertEquals("Мэйл не соответствует:", "newEmail@apple.com", editUser.getUser().getEmail());
+        assertEquals("Имя не соответствует:", "newName", editUser.getUser().getName());
     }
 
     @Test
     @DisplayName("Check edit method without auth")
     public void checkEditNotAuthUser(){
-        ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
+        ResponseUserInfo newEmail = new ResponseUserInfo("incorrect@google.com", "incorrect");
         ResponseEditUserWithError editUser = userClient.doNotEditUser(newEmail);
         assertFalse(editUser.isSuccess());
     }

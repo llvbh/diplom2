@@ -3,16 +3,14 @@ import api.UserClient;
 import api.UserCredentials;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pojo.*;
-
 import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class CreateOrderTest {
-
     private OrderClient orderClient;
     private ResponseUserLogin userInfo;
 
@@ -22,9 +20,11 @@ public class CreateOrderTest {
         orderClient = new OrderClient();
         User user = new User("Thisismy666@gmail.com", "dfsfdsf", "Email3333");
         UserCredentials cred = UserCredentials.from(user);
-        userInfo = userClient.loginUser(cred, 200, "success");
-        // Убираем слово Bearer из аксес токена
-        userInfo.setAccessToken(userInfo.getAccessToken().substring("Bearer".length() + 1));
+        userInfo = userClient.loginUser(cred);
+    }
+    @After
+    public void after() throws InterruptedException {
+        Thread.sleep(2000);
     }
 
     @Test
@@ -43,7 +43,8 @@ public class CreateOrderTest {
         String accessToken = userInfo.getAccessToken();
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
         Response createOrder = orderClient.createOrderIngredients(accessToken, ingredients, 200);
-        assertTrue(createOrder.asString().contains("name"));
+        System.out.println(createOrder.getStatusCode());
+        assertEquals(200, createOrder.getStatusCode());
         Thread.sleep(2000);
     }
 
@@ -74,7 +75,8 @@ public class CreateOrderTest {
     public void checkCreateOrderWithoutAuthUser() throws InterruptedException {
         String accessToken = "";
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
-        List<String> createOrderIngredients = orderClient.createOrder(accessToken, ingredients, 200);
+        List<String> createOrderIngredients = orderClient.createOrder("", ingredients, 200);
+        System.out.println(createOrderIngredients);
         assertNull(createOrderIngredients);
         Thread.sleep(2000);
     }
