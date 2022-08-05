@@ -11,16 +11,18 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class CreateOrderTest {
-    private OrderClient orderClient;
+    private OrderClient orderClient= new OrderClient();
     private ResponseUserLogin userInfo;
+    private static String accessToken;
 
     @Before
     public void setUp() {
         UserClient userClient = new UserClient();
-        orderClient = new OrderClient();
-        User user = new User("Thisismy666@gmail.com", "dfsfdsf", "Email3333");
+        User user = new User("Thisismymailc@gmail.com", "John", "cPassword555");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred);
+        accessToken = userInfo.getAccessToken();
+
     }
     @After
     public void after() throws InterruptedException {
@@ -29,55 +31,41 @@ public class CreateOrderTest {
 
     @Test
     @DisplayName("Check create order")
-    public void checkCreateOrderAuthUser() throws InterruptedException {
-        String accessToken = userInfo.getAccessToken();
+    public void checkCreateOrderAuthUser(){
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
-        List<String> createOrder = orderClient.createOrder(accessToken, ingredients, 200);
-        assertNotNull(createOrder);
-        Thread.sleep(2000);
-    }
-
-    @Test
-    @DisplayName("Check create order with ingredients")
-    public void checkCreateOrderWithIngredients() throws InterruptedException {
-        String accessToken = userInfo.getAccessToken();
-        Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
-        Response createOrder = orderClient.createOrderIngredients(accessToken, ingredients, 200);
-        System.out.println(createOrder.getStatusCode());
-        assertEquals(200, createOrder.getStatusCode());
-        Thread.sleep(2000);
-    }
-
-    @Test
-    @DisplayName("Check create order with wrong ingredients")
-    public void checkCreateOrderWithWrongHash() throws InterruptedException {
-        String accessToken = userInfo.getAccessToken();
-        ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
-        Ingredients ingredients = new Ingredients(List.of("61c0c5a71gfdd1f82001bdaaa6dx"));
-        Response createOrder = orderClient.createOrderIngredients(accessToken, ingredients, 500);
-        assertEquals(500, createOrder.statusCode());
-        Thread.sleep(2000);
-    }
-
-    @Test
-    @DisplayName("Check create order without ingredients")
-    public void checkCreateOrderWithoutIngredients() throws InterruptedException {
-        String accessToken = userInfo.getAccessToken();
-        ResponseUserInfo newEmail = new ResponseUserInfo("44thismynewemail@yandx.ru", "44new_namehgfhgfgh");
-        Ingredients ingredients = new Ingredients(List.of(""));
-        Response createOrder = orderClient.createOrderWithoutIngredients(accessToken, null, 400);
-        assertEquals(400, createOrder.statusCode());
-        Thread.sleep(2000);
+        List<String> createOrderAuthUser = orderClient.createOrder(accessToken, ingredients);
+        assertNotNull(createOrderAuthUser);
     }
 
     @Test
     @DisplayName("Check create order without auth")
-    public void checkCreateOrderWithoutAuthUser() throws InterruptedException {
-        String accessToken = "";
+    public void checkCreateOrderWithoutAuthUser(){
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
-        List<String> createOrderIngredients = orderClient.createOrder("", ingredients, 200);
-        System.out.println(createOrderIngredients);
+        List<String> createOrderIngredients = orderClient.createOrder("", ingredients);
         assertNull(createOrderIngredients);
-        Thread.sleep(2000);
+    }
+
+    @Test
+    @DisplayName("Check create order with ingredients")
+    public void checkCreateOrderWithIngredients(){
+        Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
+        Response createOrderWithIngredients = orderClient.createOrderIngredients(accessToken, ingredients);
+        assertEquals(200, createOrderWithIngredients.statusCode());
+    }
+
+    @Test
+    @DisplayName("Check create order with wrong ingredients")
+    public void checkCreateOrderWithWrongHash(){
+        Ingredients ingredients = new Ingredients(List.of("61c0c5a71gfdd1f82001bdaaa6dx"));
+        Response createOrderWithWrongHash = orderClient.createOrderIngredients(accessToken, ingredients);
+        assertEquals(500, createOrderWithWrongHash.statusCode());
+    }
+
+    @Test
+    @DisplayName("Check create order without ingredients")
+    public void checkCreateOrderWithoutIngredients() {
+        Ingredients ingredients = new Ingredients(null);
+        Response createOrderWithoutIngredients = orderClient.createOrderWithoutIngredients(accessToken, ingredients);
+        assertEquals(400, createOrderWithoutIngredients.statusCode());
     }
 }

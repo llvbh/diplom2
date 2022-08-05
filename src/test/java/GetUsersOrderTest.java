@@ -1,40 +1,39 @@
 import api.UserClient;
 import api.UserCredentials;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pojo.*;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class GetUsersOrderTest {
-
     private UserClient userClient;
     private ResponseUserLogin userInfo;
+    String accessToken;
 
     @Before
     public void setUp() {
         userClient = new UserClient();
-        User user = new User("Thisismy666@gmail.com", "dfsfdsf", "Email3333");
+        User user = new User("Thisismymailc@gmail.com", "John", "cPassword555");
         UserCredentials cred = UserCredentials.from(user);
-        userInfo = userClient.loginUser(cred); System.out.println("22222");
+        userInfo = userClient.loginUser(cred);
+        accessToken = userInfo.getAccessToken();
     }
-
-    @Test
-    public void checkGetAuthUsersOrders() throws InterruptedException { System.out.println("111");
-        String accessToken = userInfo.getAccessToken();
-        ResponseUserWithAuthOrders getOrdersAuthUser = userClient.getOrdersAuthUser(accessToken);
-        System.out.println("sdgfdfd");
-        System.out.println(getOrdersAuthUser.isSuccess());
-        System.out.println(getOrdersAuthUser.getOrders());
-        assertTrue(getOrdersAuthUser.isSuccess());
+    @After
+    public void after() throws InterruptedException {
         Thread.sleep(2000);
     }
 
     @Test
-    public void checkGetNotAuthUsersOrders() throws InterruptedException {
+    public void checkGetAuthUsersOrders(){
+        ResponseUserWithAuthOrders getOrdersAuthUser = userClient.getOrdersAuthUser(accessToken);
+        String getfirstOrderId = getOrdersAuthUser.getOrders().get(0).get_id();
+        assertEquals("Проверка есть ли в ответе первый заказ клиента", "62ed63c693ebc2001b4ad58f", getfirstOrderId);
+    }
+
+    @Test
+    public void checkGetNotAuthUsersOrders() {
         ResponseUserWithError getOrdersAuthUser = userClient.getOrdersNotAuthUser("", 401);
         assertEquals("You should be authorised", getOrdersAuthUser.getMessage());
-        Thread.sleep(2000);
     }
 }
