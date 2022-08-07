@@ -14,7 +14,7 @@ public class GetUsersOrderTest {
     @Before
     public void setUp() {
         userClient = new UserClient();
-        User user = new User("Thisismymailc@gmail.com", "John", "cPassword555");
+        User user = new User("post24@apple.com", "newName", "Email43333");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();
@@ -28,7 +28,8 @@ public class GetUsersOrderTest {
     public void checkGetAuthUsersOrders(){
         ResponseUserWithAuthOrders getOrdersAuthUser = userClient.getOrdersAuthUser(accessToken);
         String getfirstOrderId = getOrdersAuthUser.getOrders().get(0).get_id();
-        assertEquals("Проверка есть ли в ответе первый заказ клиента", "62ed63c693ebc2001b4ad58f", getfirstOrderId);
+        assertEquals("Проверка есть ли в ответе заказ клиента", "62ef9f2c93ebc2001b4ae142", getfirstOrderId);
+
     }
 
     @Test

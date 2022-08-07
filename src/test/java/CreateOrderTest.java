@@ -18,7 +18,7 @@ public class CreateOrderTest {
     @Before
     public void setUp() {
         UserClient userClient = new UserClient();
-        User user = new User("Thisismymailc@gmail.com", "John", "cPassword555");
+        User user = new User("post24@apple.com", "newName", "Email43333");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();
