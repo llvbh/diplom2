@@ -64,7 +64,7 @@ public class CreateOrderTest {
     @Test
     @DisplayName("Check create order without ingredients")
     public void checkCreateOrderWithoutIngredients() {
-        Ingredients ingredients = new Ingredients(null);
+        //Ingredients ingredients = new Ingredients(null);
         Response createOrderWithoutIngredients = orderClient.createOrderWithoutIngredients(accessToken);
         assertEquals(400, createOrderWithoutIngredients.statusCode());
     }
