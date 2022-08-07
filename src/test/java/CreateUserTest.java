@@ -12,7 +12,7 @@ public class CreateUserTest {
 
     @Before
     public void setUp() {
-        user = new User("post2678@apple.com", "newName2uu", "Email3333");
+        user = new User("post26748@apple.com", "newName2uu", "Email3333");
     }
 
     @After

@@ -3,12 +3,9 @@ package api;
 import io.restassured.response.Response;
 import pojo.*;
 
-import static io.restassured.RestAssured.given;
-
 public class UserClient extends RestAssuredClient {
 
-
-     public ResponseUser createUser(User user){
+     public ResponseUser createUser(User user) {
         return reqSpec
             .body(user)
             .post(REGISTER)
@@ -27,7 +24,7 @@ public class UserClient extends RestAssuredClient {
             .statusCode(202);
     }
 
-    public Response doNotCreateUser(User user, int statusCode){
+    public Response doNotCreateUser(User user, int statusCode) {
         return reqSpec
                 .body(user)
                 .post(REGISTER)
@@ -37,7 +34,7 @@ public class UserClient extends RestAssuredClient {
                 .extract().response();
     }
 
-    public ResponseUserLogin loginUser(UserCredentials creds){
+    public ResponseUserLogin loginUser(UserCredentials creds) {
         return reqSpec
                 .body(creds)
                 .when()
@@ -48,7 +45,7 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserLogin.class);
     }
 
-    public ResponseUserLoginWithError loginUserWithError(UserCredentials creds){
+    public ResponseUserLoginWithError loginUserWithError(UserCredentials creds) {
         return reqSpec
                 .body(creds)
                 .when()
@@ -59,7 +56,7 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserLoginWithError.class);
     }
 
-    public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization){
+    public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization) {
         return reqSpec
                 .auth()
                 .oauth2(authorization)
@@ -72,7 +69,7 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseEditUserWithAuth.class);
     }
 
-    public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo){
+    public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo) {
         return reqSpec
                 .body(userInfo)
                 .when()
@@ -83,7 +80,7 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseEditUserWithError.class);
     }
 
-    public ResponseUserWithAuthOrders getOrdersAuthUser(String authorization){
+    public ResponseUserWithAuthOrders getOrdersAuthUser(String authorization) {
         return reqSpec
                 .auth()
                 .oauth2(authorization)
@@ -94,13 +91,13 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserWithAuthOrders.class);
     }
 
-    public ResponseUserWithError getOrdersNotAuthUser(String authorization, int SC){
+    public ResponseUserWithError getOrdersNotAuthUser(String authorization, int statusCode) {
         return reqSpec
                 .auth()
                 .oauth2(authorization)
                 .get(ORDERS)
                 .then()
-                .statusCode(SC)
+                .statusCode(statusCode)
                 .extract()
                 .body()
                 .as(ResponseUserWithError.class);

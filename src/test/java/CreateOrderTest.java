@@ -18,7 +18,7 @@ public class CreateOrderTest {
     @Before
     public void setUp() {
         UserClient userClient = new UserClient();
-        User user = new User("post24@apple.com", "newName", "Email43333");
+        User user = new User("Nazym3@apple.com", "Nazym3", "55555");
         UserCredentials cred = UserCredentials.from(user);
         userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();
@@ -39,7 +39,7 @@ public class CreateOrderTest {
 
     @Test
     @DisplayName("Check create order without auth")
-    public void checkCreateOrderWithoutAuthUser(){
+    public void checkCreateOrderWithoutAuthUser() {
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d"));
         List<String> createOrderIngredients = orderClient.createOrder("", ingredients);
         assertNull(createOrderIngredients);
@@ -47,7 +47,7 @@ public class CreateOrderTest {
 
     @Test
     @DisplayName("Check create order with ingredients")
-    public void checkCreateOrderWithIngredients(){
+    public void checkCreateOrderWithIngredients() {
         Ingredients ingredients = new Ingredients(List.of("61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa70"));
         Response createOrderWithIngredients = orderClient.createOrderIngredients(accessToken, ingredients);
         assertEquals(200, createOrderWithIngredients.statusCode());
@@ -65,7 +65,7 @@ public class CreateOrderTest {
     @DisplayName("Check create order without ingredients")
     public void checkCreateOrderWithoutIngredients() {
         Ingredients ingredients = new Ingredients(null);
-        Response createOrderWithoutIngredients = orderClient.createOrderWithoutIngredients(accessToken, ingredients);
+        Response createOrderWithoutIngredients = orderClient.createOrderWithoutIngredients(accessToken);
         assertEquals(400, createOrderWithoutIngredients.statusCode());
     }
 }
