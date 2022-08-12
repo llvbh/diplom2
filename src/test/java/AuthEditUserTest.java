@@ -25,6 +25,7 @@ public class AuthEditUserTest {
        ResponseUserInfo cred = new ResponseUserInfo("post24@apple.com", "newName");
        ResponseEditUserWithAuth editUser = userClient.editUser(cred, accessToken, 200);
        assertEquals("post24@apple.com", editUser.getUser().getEmail());
+
     }
 
     @After
@@ -44,8 +45,7 @@ public class AuthEditUserTest {
     @Test
     @DisplayName("Check edit email method")
     public void checkEditAuthUser() {
-        ResponseUserInfo newCred = new ResponseUserInfo("xxxxx@apple.com", "yyyyyyyyyyy");
-        ResponseEditUserWithAuth editUser = userClient.editUser(newCred, accessToken, 200);
+        ResponseUserInfo newCred = new ResponseUserInfo("xxxxx@apple.com", "yyyyyyyyyyy");        ResponseEditUserWithAuth editUser = userClient.editUser(newCred, accessToken, 200);
         assertEquals("xxxxx@apple.com", editUser.getUser().getEmail());
         assertEquals("yyyyyyyyyyy", editUser.getUser().getName());
     }
@@ -53,17 +53,19 @@ public class AuthEditUserTest {
     @Test
     @DisplayName("Check Login method With Wrong Args")
     public void checkLoginUserWithWrongArgs() {
-        User user = new User(null, "Imya", "123456");
+        User user = new User("cgvgj@gmail.com", "Imya", "123456");
         UserCredentials cred = UserCredentials.from(user);
-        ResponseUserLoginWithError userInfo = userClient.loginUserWithError(cred);
-        assertEquals("email or password are incorrect", userInfo.getMessage());
+        ResponseEditUserWithError userInfo = userClient.loginUserWithError(cred, 401);
+
+        assertEquals(false, userInfo.isSuccess());
     }
 
     @Test
     @DisplayName("Check edit method without auth")
     public void checkEditNotAuthUser() {
         ResponseUserInfo newEmail = new ResponseUserInfo("incorrect@google.com", "incorrect");
-        ResponseEditUserWithError editUser = userClient.doNotEditUser(newEmail);
+        ResponseEditUserWithError editUser = userClient.doNotEditUser(newEmail, 401);
+        System.out.println(editUser);
         assertFalse(editUser.isSuccess());
     }
 }

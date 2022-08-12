@@ -13,7 +13,7 @@ public class CreateUserTest {
 
     @Before
     public void setUp() {
-        user = new User("ruslan_s@apple.com", "Ruslan", "Email3333");
+        user = new User("nazym_s@apple.com", "nazym", "Email3333");
         createUser = userClient.createUser(user, 200);
         accessToken = createUser.getAccessToken();
 }
@@ -26,7 +26,7 @@ public class CreateUserTest {
     @Test
     @DisplayName("Check create user method")
     public void checkCreateNewUser() {
-        Assert.assertTrue(createUser.getUser().getEmail().equals("ruslan_s@apple.com"));
+        Assert.assertTrue(createUser.getUser().getEmail().equals("nazym_s@apple.com"));
     }
 
     @Test

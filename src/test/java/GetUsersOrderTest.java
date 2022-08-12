@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class GetUsersOrderTest {
     User user;
+    ResponseUser createUser;
     private UserClient userClient;
     private OrderClient orderClient= new OrderClient();
     private static String accessToken;
@@ -16,7 +17,8 @@ public class GetUsersOrderTest {
     @Before
     public void setUp() {
         userClient = new UserClient();
-        user = new User("NazymZhSeitbekova@apple.com", "NazymSeitbekova", "55555");
+        user = new User("NazymSeitbekova50@google.com", "NazymSeitbekova", "55555");
+        createUser = userClient.createUser(user, 200);
         UserCredentials cred = UserCredentials.from(user);
         ResponseUserLogin userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();
@@ -42,7 +44,7 @@ public class GetUsersOrderTest {
 
     @Test
     public void checkGetNotAuthUsersOrders() {
-        ResponseUserWithError getOrdersAuthUser = userClient.getOrdersNotAuthUser("", 401);
+        ResponseUserWithError getOrdersAuthUser = userClient.getOrdersNotAuthUser("");
         assertEquals("You should be authorised", getOrdersAuthUser.getMessage());
     }
 }

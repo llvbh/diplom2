@@ -48,15 +48,17 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserLogin.class);
     }
 
-    public ResponseUserLoginWithError loginUserWithError(UserCredentials creds) {
+    public ResponseEditUserWithError loginUserWithError(UserCredentials creds, int statusCode) {
         return reqSpec
                 .body(creds)
                 .when()
                 .post(LOGIN)
                 .then()
+                .assertThat()
+                .statusCode(statusCode)
                 .extract()
                 .body()
-                .as(ResponseUserLoginWithError.class);
+                .as(ResponseEditUserWithError.class);
     }
 
     public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization, int statusCode) {
@@ -74,13 +76,14 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseEditUserWithAuth.class);
     }
 
-    public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo) {
+    public ResponseEditUserWithError doNotEditUser(ResponseUserInfo userInfo, int statusCode) {
         return reqSpec
                 .body(userInfo)
                 .when()
                 .patch(USER)
                 .then()
-
+                .assertThat()
+                .statusCode(statusCode)
                 .extract()
                 .body()
                 .as(ResponseEditUserWithError.class);
@@ -97,13 +100,12 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserWithAuthOrders.class);
     }
 
-    public ResponseUserWithError getOrdersNotAuthUser(String authorization, int statusCode) {
+    public ResponseUserWithError getOrdersNotAuthUser(String authorization) {
         return reqSpec
                 .auth()
                 .oauth2(authorization)
                 .get(ORDERS)
                 .then()
-                .statusCode(statusCode)
                 .extract()
                 .body()
                 .as(ResponseUserWithError.class);
