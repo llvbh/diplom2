@@ -5,12 +5,14 @@ import pojo.*;
 
 public class UserClient extends RestAssuredClient {
 
-     public ResponseUser createUser(User user) {
+     public ResponseUser createUser(User user, int statusCode) {
         return reqSpec
             .body(user)
             .post(REGISTER)
             .then()
-            .extract()
+             .assertThat()
+             .statusCode(statusCode)
+             .extract()
             .body()
             .as(ResponseUser.class);
      }
@@ -31,7 +33,8 @@ public class UserClient extends RestAssuredClient {
                 .then()
                 .assertThat()
                 .statusCode(statusCode)
-                .extract().response();
+                .extract()
+                .response();
     }
 
     public ResponseUserLogin loginUser(UserCredentials creds) {
@@ -56,7 +59,7 @@ public class UserClient extends RestAssuredClient {
                 .as(ResponseUserLoginWithError.class);
     }
 
-    public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization) {
+    public ResponseEditUserWithAuth editUser(ResponseUserInfo userInfo, String authorization, int statusCode) {
         return reqSpec
                 .auth()
                 .oauth2(authorization)
@@ -64,6 +67,8 @@ public class UserClient extends RestAssuredClient {
                 .when()
                 .patch(USER)
                 .then()
+                .assertThat()
+                .statusCode(statusCode)
                 .extract()
                 .body()
                 .as(ResponseEditUserWithAuth.class);
@@ -75,6 +80,7 @@ public class UserClient extends RestAssuredClient {
                 .when()
                 .patch(USER)
                 .then()
+
                 .extract()
                 .body()
                 .as(ResponseEditUserWithError.class);

@@ -17,7 +17,6 @@ public class GetUsersOrderTest {
     public void setUp() {
         userClient = new UserClient();
         user = new User("NazymZhSeitbekova@apple.com", "NazymSeitbekova", "55555");
-        ResponseUser createUser = userClient.createUser(user);
         UserCredentials cred = UserCredentials.from(user);
         ResponseUserLogin userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();

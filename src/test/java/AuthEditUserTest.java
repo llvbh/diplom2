@@ -23,7 +23,7 @@ public class AuthEditUserTest {
     @AfterClass
     public static void returnUsersCred() {
        ResponseUserInfo cred = new ResponseUserInfo("post24@apple.com", "newName");
-       ResponseEditUserWithAuth editUser = userClient.editUser(cred, accessToken);
+       ResponseEditUserWithAuth editUser = userClient.editUser(cred, accessToken, 200);
        assertEquals("post24@apple.com", editUser.getUser().getEmail());
     }
 
@@ -38,7 +38,6 @@ public class AuthEditUserTest {
         UserCredentials cred = UserCredentials.from(user);
         ResponseUserLogin userInfo = userClient.loginUser(cred);
         accessToken = userInfo.getAccessToken();
-
         assertEquals("post24@apple.com", userInfo.getUser().getEmail());
     }
 
@@ -46,7 +45,7 @@ public class AuthEditUserTest {
     @DisplayName("Check edit email method")
     public void checkEditAuthUser() {
         ResponseUserInfo newCred = new ResponseUserInfo("xxxxx@apple.com", "yyyyyyyyyyy");
-        ResponseEditUserWithAuth editUser = userClient.editUser(newCred, accessToken);
+        ResponseEditUserWithAuth editUser = userClient.editUser(newCred, accessToken, 200);
         assertEquals("xxxxx@apple.com", editUser.getUser().getEmail());
         assertEquals("yyyyyyyyyyy", editUser.getUser().getName());
     }
@@ -57,7 +56,6 @@ public class AuthEditUserTest {
         User user = new User(null, "Imya", "123456");
         UserCredentials cred = UserCredentials.from(user);
         ResponseUserLoginWithError userInfo = userClient.loginUserWithError(cred);
-        System.out.println(userInfo.isSuccess());
         assertEquals("email or password are incorrect", userInfo.getMessage());
     }
 

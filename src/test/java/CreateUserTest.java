@@ -8,45 +8,39 @@ import pojo.User;
 public class CreateUserTest {
     private final UserClient userClient = new UserClient();
     private User user;
+    ResponseUser createUser;
     private static String accessToken;
 
     @Before
     public void setUp() {
-        user = new User("post26748@apple.com", "newName2uu", "Email3333");
-    }
-
+        user = new User("ruslan_s@apple.com", "Ruslan", "Email3333");
+        createUser = userClient.createUser(user, 200);
+        accessToken = createUser.getAccessToken();
+}
     @After
-    public void after() throws InterruptedException {
-        Thread.sleep(2000);
-    }
-
-    @AfterClass
-    public static void deleteUser() {
+    public void after() {
         if (accessToken != null ) {
-           UserClient.deleteUser(accessToken);
+            UserClient.deleteUser(accessToken);
         }
     }
-
     @Test
     @DisplayName("Check create user method")
     public void checkCreateNewUser() {
-        ResponseUser createUser = userClient.createUser(user);
-        Assert.assertTrue(createUser.isSuccess());
-        accessToken = createUser.getAccessToken();
+        Assert.assertTrue(createUser.getUser().getEmail().equals("ruslan_s@apple.com"));
     }
 
     @Test
     @DisplayName("Check user add method with duplicate args")
     public void checkCreateUserWithSameValues() {
-        Response createUser = userClient.doNotCreateUser(user, 403);
-        System.out.println(createUser.getStatusCode());
-        Assert.assertEquals(403, createUser.getStatusCode());
+        Response dublicateUser = userClient.doNotCreateUser(user, 403);
+        System.out.println(dublicateUser);
+        Assert.assertEquals(403, dublicateUser.getStatusCode());
     }
 
     @Test
     @DisplayName("Check use add method With No Param")
     public void checkCreateUserWithNoEmail(){
-        user = new User(null, "qwerty12", "Altynsarin");
+        user = new User("", "qwer8ty12", "hffhfhe44");
         Response createUser = userClient.doNotCreateUser(user, 403);
         Assert.assertEquals("Email, password and name are required fields", 403, createUser.getStatusCode());
     }
