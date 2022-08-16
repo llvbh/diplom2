@@ -6,27 +6,35 @@ import pojo.ResponseUser;
 import pojo.User;
 
 public class CreateUserTest {
-    private final UserClient userClient = new UserClient();
-    private User user;
-    ResponseUser createUser;
+
+    private static final UserClient userClient = new UserClient();
+    private static User user;
+    private static ResponseUser createUser;
     private static String accessToken;
 
-    @Before
-    public void setUp() {
-        user = new User("nazym_s@apple.com", "nazym", "Email3333");
+    @BeforeClass
+    public static void setUp() {
+        user = new User("nazym_s9@apple.com", "nazym", "Email3333");
         createUser = userClient.createUser(user, 200);
         accessToken = createUser.getAccessToken();
-}
-    @After
-    public void after() {
+    }
+
+    @AfterClass
+    public static void deleteUser() {
         if (accessToken != null ) {
             UserClient.deleteUser(accessToken);
         }
     }
+
+    @After
+    public void after() throws InterruptedException {
+        Thread.sleep(2000);
+    }
+
     @Test
     @DisplayName("Check create user method")
     public void checkCreateNewUser() {
-        Assert.assertTrue(createUser.getUser().getEmail().equals("nazym_s@apple.com"));
+        Assert.assertEquals("nazym_s9@apple.com", createUser.getUser().getEmail());
     }
 
     @Test
@@ -39,7 +47,7 @@ public class CreateUserTest {
 
     @Test
     @DisplayName("Check use add method With No Param")
-    public void checkCreateUserWithNoEmail(){
+    public void checkCreateUserWithNoEmail() {
         user = new User("", "qwer8ty12", "hffhfhe44");
         Response createUser = userClient.doNotCreateUser(user, 403);
         Assert.assertEquals("Email, password and name are required fields", 403, createUser.getStatusCode());

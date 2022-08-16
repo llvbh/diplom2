@@ -1,6 +1,5 @@
 import api.OrderClient;
 import api.UserClient;
-import api.UserCredentials;
 import org.junit.*;
 import pojo.*;
 import java.util.List;
@@ -8,24 +7,21 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class GetUsersOrderTest {
-    User user;
-    ResponseUser createUser;
-    private UserClient userClient;
-    private OrderClient orderClient= new OrderClient();
+
+    private static UserClient userClient;
+    private final OrderClient orderClient = new OrderClient();
     private static String accessToken;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         userClient = new UserClient();
-        user = new User("NazymSeitbekova50@google.com", "NazymSeitbekova", "55555");
-        createUser = userClient.createUser(user, 200);
-        UserCredentials cred = UserCredentials.from(user);
-        ResponseUserLogin userInfo = userClient.loginUser(cred);
-        accessToken = userInfo.getAccessToken();
+        User user = new User("NazymSeitbekova50@google.com1", "NazymSeitbekova", "55555");
+        ResponseUser createUser = userClient.createUser(user, 200);
+        accessToken = createUser.getAccessToken();
     }
 
-    @After
-    public void after()  {
+    @AfterClass
+    public static void deleteUser() {
         if (accessToken != null ) {
             UserClient.deleteUser(accessToken);
         }

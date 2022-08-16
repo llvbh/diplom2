@@ -28,14 +28,5 @@ public class OrderClient extends RestAssuredClient  {
             .response();
     }
 
-    public Response createOrderWithoutIngredients(String authorization) {
-        return reqSpec
-            .auth()
-            .oauth2(authorization)
-            .post(ORDERS)
-            .then()
-            .assertThat()
-            .extract()
-            .response();
-    }
+
 }

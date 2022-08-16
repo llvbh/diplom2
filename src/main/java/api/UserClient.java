@@ -37,12 +37,14 @@ public class UserClient extends RestAssuredClient {
                 .response();
     }
 
-    public ResponseUserLogin loginUser(UserCredentials creds) {
+    public ResponseUserLogin loginUser(UserCredentials creds, int statusCode) {
         return reqSpec
                 .body(creds)
                 .when()
                 .post(LOGIN)
                 .then()
+                .assertThat()
+                .statusCode(statusCode)
                 .extract()
                 .body()
                 .as(ResponseUserLogin.class);
